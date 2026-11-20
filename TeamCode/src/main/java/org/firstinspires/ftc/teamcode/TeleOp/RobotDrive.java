@@ -15,8 +15,9 @@ public class RobotDrive extends LinearOpMode{
     private DcMotor BackLeft = null;
     private DcMotor BackRight = null;
     private CRServo Feeder = null;
-    //private DcMotor Turret = null;
-    //private DcMotor shooter = null;
+    private DcMotor Turret = null;
+    private DcMotor shooter = null;
+    private DcMotor intake = null;
 
     @Override
     public void runOpMode() {
@@ -24,9 +25,10 @@ public class RobotDrive extends LinearOpMode{
         FrontRight = hardwareMap.get(DcMotor.class, "FrontRight"); //Front Right Wheel
         BackLeft = hardwareMap.get(DcMotor.class, "BackLeft"); //Back Left Wheel
         BackRight = hardwareMap.get(DcMotor.class, "BackRight"); //Back Right Wheel
-        //Feeder = hardwareMap.get(CRServo.class,"Feeder"); //Feeds the shooter
-        //Turret = hardwareMap.get(DcMotor.class,"TurretGear"); //Motor to spin the turret
-        //shooter = hardwareMap.get(DcMotor.class, "Shooter"); //Shooter wheel
+        Feeder = hardwareMap.get(CRServo.class,"Feeder"); //Feeds the shooter
+        Turret = hardwareMap.get(DcMotor.class,"TurretGear"); //Motor to spin the turret
+        shooter = hardwareMap.get(DcMotor.class, "Shooter"); //Shooter wheel
+        intake = hardwareMap.get(DcMotor.class, "Shooter"); //Intakes the balls
 
         FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         BackLeft.setDirection(DcMotor.Direction.FORWARD);   //Flip of add if controls are inverted
@@ -52,7 +54,7 @@ public class RobotDrive extends LinearOpMode{
             double froward = -gamepad1.left_stick_y; //froward and back
             double strafe = gamepad1.right_stick_x; //Side to side
             double turn = gamepad1.left_stick_x; //Tuning left and right
-            //double turretSpin = gamepad2.left_stick_x; // Spin the turret
+            double turretSpin = gamepad2.left_stick_x; // Spin the turret
             if (gamepad1.bWasPressed()) {
                 if (!Shoot) {
                     Shoot = true; //Turns on fly wheel
@@ -60,7 +62,7 @@ public class RobotDrive extends LinearOpMode{
                     Shoot = false; //Turns off fly wheel
                 }
             }
-            if (gamepad2.right_trigger_pressed){
+            if (gamepad2.xWasPressed()){
                 if(!Feed){
                     Feed = true;
                 } else if (Feed) {
@@ -88,12 +90,18 @@ public class RobotDrive extends LinearOpMode{
             FrontRight.setPower(FrontRightPower);
             BackLeft.setPower(BackLeftPower);
             BackRight.setPower(BackRightPower);
-            //Turret.setPower(turretSpin);
-            //if (Shoot) {
-                //Shooter.setPower(1);
-            //}
+            Turret.setPower(turretSpin);
+            if (Shoot) {
+                shooter.setPower(1);
+            }
             if(Shoot){
                 Feeder.setPower(0.7);
+            }
+
+            if(gamepad1.left_trigger_pressed){
+                intake.setPower(1);
+            }else {
+                intake.setPower(0);
             }
         }
     }
