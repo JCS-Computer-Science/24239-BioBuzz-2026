@@ -26,7 +26,7 @@ public class SimpleAuto extends OpMode{
     private Follower follower;
     private final PoseFactory p = PoseFactory.degrees();
     private final Pose startPose = p.of(31.578192252510757, 8.203012912482071, 90);
-    private final Pose park = p.of(12.75824964131994, 119.23529411764704, 0);
+    private final Pose park = p.of(12.75824964131994, 119.23529411764704, 90);
 
     private Path Park() {
         return line(startPose, park).linear(startPose, park);
